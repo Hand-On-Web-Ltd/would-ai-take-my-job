@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Would AI Take My Job? 🤖</title>
+  <meta name="description" content="Fun quiz: find out how likely AI is to replace your job. Answer 6 questions and get your score.">
+  <meta property="og:title" content="Would AI Take My Job?">
+  <meta property="og:description" content="Take the quiz and find out if a robot is coming for your desk.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <div id="start-screen" class="screen active">
+      <h1>🤖 Would AI Take My Job?</h1>
+      <p class="subtitle">Answer 6 quick questions. Find out if you should be worried.</p>
+
+      <div class="job-select">
+        <label for="job-role">What's your job?</label>
+        <select id="job-role">
+          <option value="">Pick one...</option>
+          <option value="accountant">Accountant</option>
+          <option value="admin">Admin / Office Manager</option>
+          <option value="copywriter">Copywriter / Content Writer</option>
+          <option value="customer-support">Customer Support</option>
+          <option value="data-entry">Data Entry</option>
+          <option value="designer">Graphic Designer</option>
+          <option value="developer">Software Developer</option>
+          <option value="driver">Driver / Delivery</option>
+          <option value="electrician">Electrician / Plumber</option>
+          <option value="hr">HR Manager</option>
+          <option value="lawyer">Lawyer / Solicitor</option>
+          <option value="marketing">Marketing Manager</option>
+          <option value="nurse">Nurse / Healthcare</option>
+          <option value="photographer">Photographer</option>
+          <option value="sales">Sales Rep</option>
+          <option value="teacher">Teacher</option>
+          <option value="therapist">Therapist / Counsellor</option>
+          <option value="translator">Translator</option>
+          <option value="other">Other</option>
+        </select>
+        <input type="text" id="custom-job" placeholder="Type your job title" style="display:none">
+      </div>
+
+      <button id="start-btn" class="btn" disabled>Let's Find Out →</button>
+    </div>
+
+    <div id="quiz-screen" class="screen">
+      <div class="progress">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+      <div class="question-counter" id="q-counter">Question 1 of 6</div>
+      <h2 id="question-text"></h2>
+      <div id="options" class="options"></div>
+    </div>
+
+    <div id="result-screen" class="screen">
+      <h2>Your AI Replacement Score</h2>
+      <div class="score-circle" id="score-circle">
+        <span id="score-number">0</span>
+      </div>
+      <p class="score-label" id="score-label"></p>
+      <p class="score-desc" id="score-desc"></p>
+      <div class="result-breakdown" id="breakdown"></div>
+      <button class="btn" onclick="location.reload()">Try Another Job →</button>
+      <p class="credit">Made by <a href="https://www.handonweb.com">Hand On Web</a> — we build the AI that might take your job 😉</p>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        text: "How much of your day is spent doing the same tasks over and over?",
+        options: [
+          { text: "Almost everything is repetitive", score: 20 },
+          { text: "A fair chunk — maybe 60%", score: 15 },
+          { text: "Some repetition, but lots of variety", score: 8 },
+          { text: "Every day is completely different", score: 3 }
+        ]
+      },
+      {
+        text: "Do you need to physically be somewhere to do your job?",
+        options: [
+          { text: "Nope, fully remote works fine", score: 16 },
+          { text: "Sometimes, but a lot is digital", score: 12 },
+          { text: "Yes, I work with my hands or in person", score: 4 },
+          { text: "100% — you can't do this job remotely", score: 2 }
+        ]
+      },
+      {
+        text: "How important is reading human emotions in your role?",
+        options: [
+          { text: "Not at all — it's all data and logic", score: 18 },
+          { text: "A little — I deal with people sometimes", score: 12 },
+          { text: "Quite important — empathy matters", score: 5 },
+          { text: "It's the whole job — I need deep human connection", score: 2 }
+        ]
+      },
+      {
+        text: "How much original thinking does your job need?",
+        options: [
+          { text: "I follow clear processes and rules", score: 18 },
+          { text: "Some creativity, but mostly following templates", score: 13 },
+          { text: "Regular creative problem-solving", score: 6 },
+          { text: "Constant original ideas — that's what I'm paid for", score: 3 }
+        ]
+      },
+      {
+        text: "Could someone learn to do your job in a week?",
+        options: [
+          { text: "Honestly, yeah, most of it", score: 18 },
+          { text: "The basics, but not the tricky stuff", score: 12 },
+          { text: "No way — it takes months of training", score: 5 },
+          { text: "It took me years to get good at this", score: 2 }
+        ]
+      },
+      {
+        text: "What's your main output at work?",
+        options: [
+          { text: "Text, spreadsheets, or data", score: 16 },
+          { text: "Emails, reports, and documents", score: 14 },
+          { text: "Mix of digital and physical work", score: 8 },
+          { text: "Physical things — buildings, food, care, repairs", score: 3 }
+        ]
+      }
+    ];
+
+    const results = [
+      { max: 20, label: "You're Basically Irreplaceable 💪", desc: "AI would need a body, a soul, and probably a union card to do what you do. Sleep easy." },
+      { max: 35, label: "Pretty Safe... For Now 😌", desc: "AI can help with bits of your job, but the core stuff? That's still very much a human gig." },
+      { max: 50, label: "Keep One Eye Open 👀", desc: "Some parts of your job are already being automated. Worth learning what AI tools exist in your field." },
+      { max: 65, label: "Time to Upskill 📚", desc: "AI is getting good at a lot of what you do. The people who'll be fine are the ones who learn to work WITH AI, not against it." },
+      { max: 80, label: "Might Want to Update That CV 😬", desc: "Not gonna sugarcoat it — AI is coming for a big chunk of this role. The good news? You can pivot into managing the AI that replaces the boring parts." },
+      { max: 101, label: "Start Learning Plumbing 🔧", desc: "We're not saying tomorrow, but... yeah. This role is very much in AI's crosshairs. Time to think about what humans can do that machines can't." }
+    ];
+
+    let currentQ = 0;
+    let totalScore = 0;
+    let jobTitle = '';
+
+    const jobSelect = document.getElementById('job-role');
+    const customJob = document.getElementById('custom-job');
+    const startBtn = document.getElementById('start-btn');
+
+    jobSelect.addEventListener('change', () => {
+      if (jobSelect.value === 'other') {
+        customJob.style.display = 'block';
+        startBtn.disabled = !customJob.value.trim();
+        customJob.addEventListener('input', () => { startBtn.disabled = !customJob.value.trim(); });
+      } else {
+        customJob.style.display = 'none';
+        startBtn.disabled = !jobSelect.value;
+      }
+    });
+
+    startBtn.addEventListener('click', () => {
+      jobTitle = jobSelect.value === 'other' ? customJob.value : jobSelect.options[jobSelect.selectedIndex].text;
+      showScreen('quiz-screen');
+      showQuestion();
+    });
+
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    function showQuestion() {
+      const q = questions[currentQ];
+      document.getElementById('q-counter').textContent = `Question ${currentQ + 1} of ${questions.length}`;
+      document.getElementById('progress-bar').style.width = `${((currentQ) / questions.length) * 100}%`;
+      document.getElementById('question-text').textContent = q.text;
+
+      const optionsEl = document.getElementById('options');
+      optionsEl.innerHTML = '';
+      q.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.textContent = opt.text;
+        btn.addEventListener('click', () => {
+          totalScore += opt.score;
+          currentQ++;
+          if (currentQ < questions.length) {
+            showQuestion();
+          } else {
+            showResult();
+          }
+        });
+        optionsEl.appendChild(btn);
+      });
+    }
+
+    function showResult() {
+      document.getElementById('progress-bar').style.width = '100%';
+      // Normalize score to 0-100
+      const maxPossible = 106; // sum of max scores
+      const normalized = Math.round((totalScore / maxPossible) * 100);
+
+      const scoreEl = document.getElementById('score-number');
+      const circleEl = document.getElementById('score-circle');
+
+      // Find result bracket
+      const result = results.find(r => normalized <= r.max) || results[results.length - 1];
+
+      // Color the circle
+      const hue = Math.round(120 - (normalized * 1.2)); // green to red
+      circleEl.style.borderColor = `hsl(${hue}, 70%, 50%)`;
+      scoreEl.style.color = `hsl(${hue}, 70%, 40%)`;
+
+      document.getElementById('score-label').textContent = result.label;
+      document.getElementById('score-desc').textContent = result.desc;
+
+      // Animate score
+      let current = 0;
+      const interval = setInterval(() => {
+        current += 1;
+        scoreEl.textContent = current;
+        if (current >= normalized) clearInterval(interval);
+      }, 20);
+
+      showScreen('result-screen');
+    }
+  </script>
+</body>
+</html>
